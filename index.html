@@ -1,0 +1,498 @@
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@argdown/web-components/dist/argdown-map.css"><script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs/webcomponents-bundle.js" type="module"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@argdown/web-components/dist/argdown-map.js"></script><figure  role="group" class="argdown-figure"><argdown-map      initial-view="map"><div slot="source" class=""><pre class="language-argdown"><code class="language-argdown"><span class="hljs-section"># Removing Wintab from Blender</span>
+
+<span class="hljs-statement-title">[Remove Wintab in Blender 2.93]:</span> Blender 2.93 should remove Wintab and use Windows Pointers Events (Windows Ink) exclusively for tablet input on Windows.
+ 
+<span class="hljs-argument-title">&lt;Mouse mode pressure loss&gt;:</span> Pressure support with a tablet in mouse mode (relative motion) is only supportable with Wintab. Windows Ink doesn&#x27;t support mouse mode tablet input with pressure.
+<span class="hljs-attack">    -</span> Mouse mode tablet support is a quirk of Blender not using tablet position from Wintab. Blender&#x27;s peers (GIMP, Krita) do not support mouse mode tablet input.
+<span class="hljs-support">        +</span> Wintab contexts with sysMode (mouse mode) enabled also don&#x27;t support pressure.
+<span class="hljs-support">        +</span> The system mouse mode setting is not reported by the Wintab API and can not be detected without unreliable heuristics.
+<span class="hljs-attack">    -&gt;</span> <span class="hljs-statement-title">[Remove Wintab in Blender 2.93]</span>
+
+<span class="hljs-argument-title">&lt;Windows Ink detractors&gt;:</span> Windows Ink has vocal detractors. Removal of Wintab will elicit a strong negative response.
+<span class="hljs-attack">    -</span> Clear communication of the problems with Wintab and the costs to support can mitigate strong feelings against Windows Ink.
+<span class="hljs-support">        +</span> Wintab is implicatable in Blender not having touch support due to occupying developer time.
+<span class="hljs-support">    +</span> Current default of Wintab over Windows Ink may result in under-reporting of Windows Ink issues.
+<span class="hljs-attack">    -&gt;</span> <span class="hljs-statement-title">[Remove Wintab in Blender 2.93]</span>
+
+<span class="hljs-argument-title">&lt;Wintab worse than Windows Ink&gt;:</span> Wintab for the average user is a worse experience than Windows Ink which supports high frequency input.
+<span class="hljs-support">    +</span> Differences in Wintab libraries has killed the possibility of using high frequency position from Wintab.
+<span class="hljs-support">    +&gt;</span> <span class="hljs-statement-title">[Remove Wintab in Blender 2.93]</span>
+
+<span class="hljs-argument-title">&lt;Wintab Win32 sync issues&gt;:</span> Synchronization issues between Wintab pressure and Win32 mouse moves results in poor line quality.
+<span class="hljs-support">    +</span> Wrong pressure at the beginning and ends of lines has to be cleaned up with heuristics in operators that use pressure specifically for Wintab.
+<span class="hljs-support">        +</span> Issue is more pronounced with high frequency mouse input.
+<span class="hljs-support">    +</span> Only the most recent pressure is used for multiple mouse moves because cursor position and pressure are not tightly coupled.
+<span class="hljs-support">    +&gt;</span> <span class="hljs-statement-title">[Remove Wintab in Blender 2.93]</span>
+
+<span class="hljs-argument-title">&lt;Communication and debugging&gt;:</span> The combinations of Blender having the Tablet API set while tablet preferences software allows users to disable Windows Ink creates ambiguities when communicating with bug reporters.
+<span class="hljs-support">    +</span> Issue made worse because most tablet bug reports require extensive communication with the reporter as the issue is device specific.
+<span class="hljs-support">    +&gt;</span> <span class="hljs-argument-title">&lt;Developer burden&gt;</span>
+
+<span class="hljs-statement-title">[Make Wintab opt-in for Blender 2.93]:</span> Instead of removing Wintab in Blender 2.93, it should be made opt-in.
+<span class="hljs-attack">    -&gt;</span> <span class="hljs-argument-title">&lt;Windows Ink detractors&gt;</span>
+
+<span class="hljs-argument-title">&lt;Developer burden&gt;:</span> Differences in Wintab libraries makes debugging a time consuming affair.
+<span class="hljs-attack">    -&gt;</span> <span class="hljs-statement-title">[Make Wintab opt-in for Blender 2.93]</span>
+
+<span class="hljs-argument-title">&lt;Artist needs first&gt;:</span> Blender prioritizes artists&#x27; over developers&#x27; needs.
+<span class="hljs-attack">    -</span> Wintab is less stable than Windows Ink.
+<span class="hljs-attack">    -</span> Supporting Wintab increases the chance that artist will run into issues with tablets.
+<span class="hljs-attack">        -</span> Not supporting Wintab increases the chance that an artist with a tablet issue won&#x27;t be solvable.
+<span class="hljs-attack">    -&gt;</span> <span class="hljs-argument-title">&lt;Developer burden&gt;</span>
+
+<span class="hljs-argument-title">&lt;Wintab dead API&gt;:</span> Wintab no longer has a central authority to update the specification. It is a dead API in the sense that Latin is a dead language.
+<span class="hljs-support">    +</span> Wacom considers Wintab a legacy API and does not update the specification.
+<span class="hljs-support">        +</span> Wacom&#x27;s Wintab documentation was sporatically offline during attempted refactor of Blender&#x27;s use of Wintab.
+<span class="hljs-support">        +</span> Wacom&#x27;s current Wintab documentation does not appear to be linked through the main website.
+<span class="hljs-support">    +</span> Wintab has not been updated to describe how system cursor scaling works with DPI awareness of an application.
+<span class="hljs-support">        +</span> Different librarys have chosen (or unaware of differences) behavior.
+<span class="hljs-support">    +&gt;</span> <span class="hljs-argument-title">&lt;Developer burden&gt;</span>
+
+<span class="hljs-argument-title">&lt;Good time to remove Wintab&gt;:</span> Windows Ink is available for any Windows system Blender 2.93 can run on.
+<span class="hljs-attack">    -&gt;</span> <span class="hljs-statement-title">[Make Wintab opt-in for Blender 2.93]</span>
+
+</code></pre></div><div slot="map">
+<!-- Generated by graphviz version 2.44.0 (20200408.0750)
+ -->
+<!-- Title: Argument Map Pages: 1 -->
+<svg width="720pt" height="363pt"
+ viewBox="0.00 0.00 720.00 363.49" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.47 0.47) rotate(0) translate(4 766.4)">
+<title>Argument Map</title>
+<g id="clust1" class="cluster">
+<title>cluster_1</title>
+<polygon fill="#dadada" stroke="#dadada" points="8,-8 8,-754.4 1510,-754.4 1510,-8 8,-8"/>
+<text text-anchor="start" x="675.66" y="-739.6" font-family="arial" font-size="12.00" fill="#000000">Removing Wintab from Blender</text>
+</g>
+<!-- n0 -->
+<g id="node1" class="node">
+<title>n0</title>
+<path fill="white" stroke="#1b9e77" stroke-width="2" d="M873.5,-724C873.5,-724 696.5,-724 696.5,-724 690.5,-724 684.5,-718 684.5,-712 684.5,-712 684.5,-660 684.5,-660 684.5,-654 690.5,-648 696.5,-648 696.5,-648 873.5,-648 873.5,-648 879.5,-648 885.5,-654 885.5,-660 885.5,-660 885.5,-712 885.5,-712 885.5,-718 879.5,-724 873.5,-724"/>
+<text text-anchor="start" x="714.93" y="-710" font-family="arial" font-weight="bold" font-size="10.00" fill="#000000">Remove Wintab in Blender 2.93</text>
+<text text-anchor="start" x="696.31" y="-693" font-family="arial" font-size="10.00" fill="#000000">Blender 2.93 should remove Wintab and</text>
+<text text-anchor="start" x="694.66" y="-681" font-family="arial" font-size="10.00" fill="#000000"> use Windows Pointers Events (Windows</text>
+<text text-anchor="start" x="710.21" y="-669" font-family="arial" font-size="10.00" fill="#000000"> Ink) exclusively for tablet input on</text>
+<text text-anchor="start" x="762.44" y="-657" font-family="arial" font-size="10.00" fill="#000000"> Windows.</text>
+</g>
+<!-- n1 -->
+<g id="node2" class="node">
+<title>n1</title>
+<path fill="white" stroke="#1b9e77" stroke-width="2" d="M1489.5,-488C1489.5,-488 1312.5,-488 1312.5,-488 1306.5,-488 1300.5,-482 1300.5,-476 1300.5,-476 1300.5,-440 1300.5,-440 1300.5,-434 1306.5,-428 1312.5,-428 1312.5,-428 1489.5,-428 1489.5,-428 1495.5,-428 1501.5,-434 1501.5,-440 1501.5,-440 1501.5,-476 1501.5,-476 1501.5,-482 1495.5,-488 1489.5,-488"/>
+<text text-anchor="start" x="1313.98" y="-473" font-family="arial" font-size="10.00" fill="#000000">Mouse mode tablet support is a quirk of</text>
+<text text-anchor="start" x="1317.59" y="-461" font-family="arial" font-size="10.00" fill="#000000"> Blender not using tablet position from</text>
+<text text-anchor="start" x="1316.5" y="-449" font-family="arial" font-size="10.00" fill="#000000"> Wintab. Blender&#39;s peers (GIMP, Krita)</text>
+<text text-anchor="start" x="1310.63" y="-437" font-family="arial" font-size="10.00" fill="#000000"> do not support mouse mode tablet input.</text>
+</g>
+<!-- n21 -->
+<g id="node22" class="node">
+<title>n21</title>
+<path fill="#1b9e77" stroke="black" d="M1352,-612C1352,-612 1180,-612 1180,-612 1174,-612 1168,-606 1168,-600 1168,-600 1168,-536 1168,-536 1168,-530 1174,-524 1180,-524 1180,-524 1352,-524 1352,-524 1358,-524 1364,-530 1364,-536 1364,-536 1364,-600 1364,-600 1364,-606 1358,-612 1352,-612"/>
+<text text-anchor="start" x="1205.99" y="-598" font-family="arial" font-weight="bold" font-size="10.00" fill="#000000">Mouse mode pressure loss</text>
+<text text-anchor="start" x="1178.2" y="-581" font-family="arial" font-size="10.00" fill="#000000">Pressure support with a tablet in mouse</text>
+<text text-anchor="start" x="1199.33" y="-569" font-family="arial" font-size="10.00" fill="#000000"> mode (relative motion) is only</text>
+<text text-anchor="start" x="1180.15" y="-557" font-family="arial" font-size="10.00" fill="#000000"> supportable with Wintab. Windows Ink</text>
+<text text-anchor="start" x="1186.54" y="-545" font-family="arial" font-size="10.00" fill="#000000"> doesn&#39;t support mouse mode tablet</text>
+<text text-anchor="start" x="1221.27" y="-533" font-family="arial" font-size="10.00" fill="#000000"> input with pressure.</text>
+</g>
+<!-- n1&#45;&gt;n21 -->
+<g id="edge3" class="edge">
+<title>n1&#45;&gt;n21</title>
+<path fill="none" stroke="#ff0000" d="M1364.47,-488.23C1353.19,-497.25 1340.45,-507.44 1327.96,-517.43"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="1325.43,-514.98 1319.8,-523.96 1329.8,-520.44 1325.43,-514.98"/>
+</g>
+<!-- n2 -->
+<g id="node3" class="node">
+<title>n2</title>
+<path fill="white" stroke="#1b9e77" stroke-width="2" d="M1490,-386C1490,-386 1318,-386 1318,-386 1312,-386 1306,-380 1306,-374 1306,-374 1306,-350 1306,-350 1306,-344 1312,-338 1318,-338 1318,-338 1490,-338 1490,-338 1496,-338 1502,-344 1502,-350 1502,-350 1502,-374 1502,-374 1502,-380 1496,-386 1490,-386"/>
+<text text-anchor="start" x="1318.71" y="-371" font-family="arial" font-size="10.00" fill="#000000">Wintab contexts with sysMode (mouse</text>
+<text text-anchor="start" x="1328.43" y="-359" font-family="arial" font-size="10.00" fill="#000000"> mode) enabled also don&#39;t support</text>
+<text text-anchor="start" x="1381.77" y="-347" font-family="arial" font-size="10.00" fill="#000000"> pressure.</text>
+</g>
+<!-- n2&#45;&gt;n1 -->
+<g id="edge1" class="edge">
+<title>n2&#45;&gt;n1</title>
+<path fill="none" stroke="#00ff00" d="M1403.26,-386.24C1402.95,-395.79 1402.59,-407.13 1402.25,-417.9"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="1398.75,-417.87 1401.93,-427.97 1405.74,-418.09 1398.75,-417.87"/>
+</g>
+<!-- n3 -->
+<g id="node4" class="node">
+<title>n3</title>
+<path fill="white" stroke="#1b9e77" stroke-width="2" d="M1275.5,-392C1275.5,-392 1102.5,-392 1102.5,-392 1096.5,-392 1090.5,-386 1090.5,-380 1090.5,-380 1090.5,-344 1090.5,-344 1090.5,-338 1096.5,-332 1102.5,-332 1102.5,-332 1275.5,-332 1275.5,-332 1281.5,-332 1287.5,-338 1287.5,-344 1287.5,-344 1287.5,-380 1287.5,-380 1287.5,-386 1281.5,-392 1275.5,-392"/>
+<text text-anchor="start" x="1103.92" y="-377" font-family="arial" font-size="10.00" fill="#000000">The system mouse mode setting is not</text>
+<text text-anchor="start" x="1100.58" y="-365" font-family="arial" font-size="10.00" fill="#000000"> reported by the Wintab API and can not</text>
+<text text-anchor="start" x="1121.7" y="-353" font-family="arial" font-size="10.00" fill="#000000"> be detected without unreliable</text>
+<text text-anchor="start" x="1165.61" y="-341" font-family="arial" font-size="10.00" fill="#000000"> heuristics.</text>
+</g>
+<!-- n3&#45;&gt;n1 -->
+<g id="edge2" class="edge">
+<title>n3&#45;&gt;n1</title>
+<path fill="none" stroke="#00ff00" d="M1254.63,-392.1C1277.28,-402.14 1302.82,-413.47 1326.16,-423.81"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="1324.76,-427.02 1335.32,-427.88 1327.6,-420.62 1324.76,-427.02"/>
+</g>
+<!-- n4 -->
+<g id="node5" class="node">
+<title>n4</title>
+<path fill="white" stroke="#1b9e77" stroke-width="2" d="M1056,-488C1056,-488 884,-488 884,-488 878,-488 872,-482 872,-476 872,-476 872,-440 872,-440 872,-434 878,-428 884,-428 884,-428 1056,-428 1056,-428 1062,-428 1068,-434 1068,-440 1068,-440 1068,-476 1068,-476 1068,-482 1062,-488 1056,-488"/>
+<text text-anchor="start" x="887.21" y="-473" font-family="arial" font-size="10.00" fill="#000000">Clear communication of the problems</text>
+<text text-anchor="start" x="888.03" y="-461" font-family="arial" font-size="10.00" fill="#000000"> with Wintab and the costs to support</text>
+<text text-anchor="start" x="890.26" y="-449" font-family="arial" font-size="10.00" fill="#000000"> can mitigate strong feelings against</text>
+<text text-anchor="start" x="938.89" y="-437" font-family="arial" font-size="10.00" fill="#000000"> Windows Ink.</text>
+</g>
+<!-- n22 -->
+<g id="node23" class="node">
+<title>n22</title>
+<path fill="#1b9e77" stroke="black" d="M1004,-600C1004,-600 832,-600 832,-600 826,-600 820,-594 820,-588 820,-588 820,-548 820,-548 820,-542 826,-536 832,-536 832,-536 1004,-536 1004,-536 1010,-536 1016,-542 1016,-548 1016,-548 1016,-588 1016,-588 1016,-594 1010,-600 1004,-600"/>
+<text text-anchor="start" x="866.05" y="-586" font-family="arial" font-weight="bold" font-size="10.00" fill="#000000">Windows Ink detractors</text>
+<text text-anchor="start" x="842.15" y="-569" font-family="arial" font-size="10.00" fill="#000000">Windows Ink has vocal detractors.</text>
+<text text-anchor="start" x="835.22" y="-557" font-family="arial" font-size="10.00" fill="#000000"> Removal of Wintab will elicit a strong</text>
+<text text-anchor="start" x="874.37" y="-545" font-family="arial" font-size="10.00" fill="#000000"> negative response.</text>
+</g>
+<!-- n4&#45;&gt;n22 -->
+<g id="edge6" class="edge">
+<title>n4&#45;&gt;n22</title>
+<path fill="none" stroke="#ff0000" d="M955.93,-488.23C950.22,-500.09 943.52,-513.99 937.36,-526.78"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="934.18,-525.33 932.99,-535.86 940.49,-528.37 934.18,-525.33"/>
+</g>
+<!-- n5 -->
+<g id="node6" class="node">
+<title>n5</title>
+<path fill="white" stroke="#1b9e77" stroke-width="2" d="M618,-386C618,-386 446,-386 446,-386 440,-386 434,-380 434,-374 434,-374 434,-350 434,-350 434,-344 440,-338 446,-338 446,-338 618,-338 618,-338 624,-338 630,-344 630,-350 630,-350 630,-374 630,-374 630,-380 624,-386 618,-386"/>
+<text text-anchor="start" x="451.43" y="-371" font-family="arial" font-size="10.00" fill="#000000">Wintab is implicatable in Blender not</text>
+<text text-anchor="start" x="445.02" y="-359" font-family="arial" font-size="10.00" fill="#000000"> having touch support due to occupying</text>
+<text text-anchor="start" x="496.44" y="-347" font-family="arial" font-size="10.00" fill="#000000"> developer time.</text>
+</g>
+<!-- n5&#45;&gt;n4 -->
+<g id="edge5" class="edge">
+<title>n5&#45;&gt;n4</title>
+<path fill="none" stroke="#00ff00" d="M613.57,-386.06C622.13,-388.19 630.72,-390.22 639,-392 734.49,-412.55 762.68,-407.16 862.01,-427.88"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="861.34,-431.32 871.85,-429.97 862.8,-424.47 861.34,-431.32"/>
+</g>
+<!-- n6 -->
+<g id="node7" class="node">
+<title>n6</title>
+<path fill="white" stroke="#1b9e77" stroke-width="2" d="M842,-482C842,-482 670,-482 670,-482 664,-482 658,-476 658,-470 658,-470 658,-446 658,-446 658,-440 664,-434 670,-434 670,-434 842,-434 842,-434 848,-434 854,-440 854,-446 854,-446 854,-470 854,-470 854,-476 848,-482 842,-482"/>
+<text text-anchor="start" x="667.65" y="-467" font-family="arial" font-size="10.00" fill="#000000">Current default of Wintab over Windows</text>
+<text text-anchor="start" x="677.1" y="-455" font-family="arial" font-size="10.00" fill="#000000"> Ink may result in under&#45;reporting of</text>
+<text text-anchor="start" x="709.33" y="-443" font-family="arial" font-size="10.00" fill="#000000"> Windows Ink issues.</text>
+</g>
+<!-- n6&#45;&gt;n22 -->
+<g id="edge7" class="edge">
+<title>n6&#45;&gt;n22</title>
+<path fill="none" stroke="#00ff00" d="M790.75,-482.17C811.7,-496.13 838.86,-514.24 862.7,-530.13"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="861.05,-533.24 871.32,-535.88 864.94,-527.42 861.05,-533.24"/>
+</g>
+<!-- n7 -->
+<g id="node8" class="node">
+<title>n7</title>
+<path fill="white" stroke="#1b9e77" stroke-width="2" d="M628,-482C628,-482 456,-482 456,-482 450,-482 444,-476 444,-470 444,-470 444,-446 444,-446 444,-440 450,-434 456,-434 456,-434 628,-434 628,-434 634,-434 640,-440 640,-446 640,-446 640,-470 640,-470 640,-476 634,-482 628,-482"/>
+<text text-anchor="start" x="466.16" y="-467" font-family="arial" font-size="10.00" fill="#000000">Differences in Wintab libraries has</text>
+<text text-anchor="start" x="468.1" y="-455" font-family="arial" font-size="10.00" fill="#000000"> killed the possibility of using high</text>
+<text text-anchor="start" x="470.32" y="-443" font-family="arial" font-size="10.00" fill="#000000"> frequency position from Wintab.</text>
+</g>
+<!-- n23 -->
+<g id="node24" class="node">
+<title>n23</title>
+<path fill="#1b9e77" stroke="black" d="M738,-600C738,-600 566,-600 566,-600 560,-600 554,-594 554,-588 554,-588 554,-548 554,-548 554,-542 560,-536 566,-536 566,-536 738,-536 738,-536 744,-536 750,-542 750,-548 750,-548 750,-588 750,-588 750,-594 744,-600 738,-600"/>
+<text text-anchor="start" x="580.88" y="-586" font-family="arial" font-weight="bold" font-size="10.00" fill="#000000">Wintab worse than Windows Ink</text>
+<text text-anchor="start" x="566.43" y="-569" font-family="arial" font-size="10.00" fill="#000000">Wintab for the average user is a worse</text>
+<text text-anchor="start" x="571.15" y="-557" font-family="arial" font-size="10.00" fill="#000000"> experience than Windows Ink which</text>
+<text text-anchor="start" x="583.64" y="-545" font-family="arial" font-size="10.00" fill="#000000"> supports high frequency input.</text>
+</g>
+<!-- n7&#45;&gt;n23 -->
+<g id="edge9" class="edge">
+<title>n7&#45;&gt;n23</title>
+<path fill="none" stroke="#00ff00" d="M565.6,-482.17C579.27,-495.59 596.83,-512.84 612.55,-528.27"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="610.51,-531.17 620.09,-535.67 615.41,-526.17 610.51,-531.17"/>
+</g>
+<!-- n8 -->
+<g id="node9" class="node">
+<title>n8</title>
+<path fill="white" stroke="#1b9e77" stroke-width="2" d="M414,-488C414,-488 242,-488 242,-488 236,-488 230,-482 230,-476 230,-476 230,-440 230,-440 230,-434 236,-428 242,-428 242,-428 414,-428 414,-428 420,-428 426,-434 426,-440 426,-440 426,-476 426,-476 426,-482 420,-488 414,-488"/>
+<text text-anchor="start" x="245.75" y="-473" font-family="arial" font-size="10.00" fill="#000000">Wrong pressure at the beginning and</text>
+<text text-anchor="start" x="250.75" y="-461" font-family="arial" font-size="10.00" fill="#000000"> ends of lines has to be cleaned up</text>
+<text text-anchor="start" x="248.26" y="-449" font-family="arial" font-size="10.00" fill="#000000"> with heuristics in operators that use</text>
+<text text-anchor="start" x="256.05" y="-437" font-family="arial" font-size="10.00" fill="#000000"> pressure specifically for Wintab.</text>
+</g>
+<!-- n24 -->
+<g id="node25" class="node">
+<title>n24</title>
+<path fill="#1b9e77" stroke="black" d="M420.5,-600C420.5,-600 235.5,-600 235.5,-600 229.5,-600 223.5,-594 223.5,-588 223.5,-588 223.5,-548 223.5,-548 223.5,-542 229.5,-536 235.5,-536 235.5,-536 420.5,-536 420.5,-536 426.5,-536 432.5,-542 432.5,-548 432.5,-548 432.5,-588 432.5,-588 432.5,-594 426.5,-600 420.5,-600"/>
+<text text-anchor="start" x="270.16" y="-586" font-family="arial" font-weight="bold" font-size="10.00" fill="#000000">Wintab Win32 sync issues</text>
+<text text-anchor="start" x="240.15" y="-569" font-family="arial" font-size="10.00" fill="#000000">Synchronization issues between Wintab</text>
+<text text-anchor="start" x="233.76" y="-557" font-family="arial" font-size="10.00" fill="#000000"> pressure and Win32 mouse moves results</text>
+<text text-anchor="start" x="285.44" y="-545" font-family="arial" font-size="10.00" fill="#000000"> in poor line quality.</text>
+</g>
+<!-- n8&#45;&gt;n24 -->
+<g id="edge12" class="edge">
+<title>n8&#45;&gt;n24</title>
+<path fill="none" stroke="#00ff00" d="M328,-488.23C328,-499.74 328,-513.18 328,-525.66"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="324.5,-525.86 328,-535.86 331.5,-525.86 324.5,-525.86"/>
+</g>
+<!-- n9 -->
+<g id="node10" class="node">
+<title>n9</title>
+<path fill="white" stroke="#1b9e77" stroke-width="2" d="M404,-380C404,-380 232,-380 232,-380 226,-380 220,-374 220,-368 220,-368 220,-356 220,-356 220,-350 226,-344 232,-344 232,-344 404,-344 404,-344 410,-344 416,-350 416,-356 416,-356 416,-368 416,-368 416,-374 410,-380 404,-380"/>
+<text text-anchor="start" x="239.37" y="-365" font-family="arial" font-size="10.00" fill="#000000">Issue is more pronounced with high</text>
+<text text-anchor="start" x="264.65" y="-353" font-family="arial" font-size="10.00" fill="#000000"> frequency mouse input.</text>
+</g>
+<!-- n9&#45;&gt;n8 -->
+<g id="edge11" class="edge">
+<title>n9&#45;&gt;n8</title>
+<path fill="none" stroke="#00ff00" d="M319.83,-380.24C320.95,-390.7 322.41,-404.49 323.8,-417.5"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="320.34,-418.11 324.88,-427.68 327.3,-417.37 320.34,-418.11"/>
+</g>
+<!-- n10 -->
+<g id="node11" class="node">
+<title>n10</title>
+<path fill="white" stroke="#1b9e77" stroke-width="2" d="M200,-488C200,-488 28,-488 28,-488 22,-488 16,-482 16,-476 16,-476 16,-440 16,-440 16,-434 22,-428 28,-428 28,-428 200,-428 200,-428 206,-428 212,-434 212,-440 212,-440 212,-476 212,-476 212,-482 206,-488 200,-488"/>
+<text text-anchor="start" x="29.81" y="-473" font-family="arial" font-size="10.00" fill="#000000">Only the most recent pressure is used</text>
+<text text-anchor="start" x="35.37" y="-461" font-family="arial" font-size="10.00" fill="#000000"> for multiple mouse moves because</text>
+<text text-anchor="start" x="32.59" y="-449" font-family="arial" font-size="10.00" fill="#000000"> cursor position and pressure are not</text>
+<text text-anchor="start" x="79.27" y="-437" font-family="arial" font-size="10.00" fill="#000000"> tightly coupled.</text>
+</g>
+<!-- n10&#45;&gt;n24 -->
+<g id="edge13" class="edge">
+<title>n10&#45;&gt;n24</title>
+<path fill="none" stroke="#00ff00" d="M171.63,-488.08C197.99,-501.39 229.47,-517.27 257.25,-531.3"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="256.01,-534.59 266.52,-535.97 259.17,-528.34 256.01,-534.59"/>
+</g>
+<!-- n11 -->
+<g id="node12" class="node">
+<title>n11</title>
+<path fill="white" stroke="#1b9e77" stroke-width="2" d="M1385,-160C1385,-160 1213,-160 1213,-160 1207,-160 1201,-154 1201,-148 1201,-148 1201,-112 1201,-112 1201,-106 1207,-100 1213,-100 1213,-100 1385,-100 1385,-100 1391,-100 1397,-106 1397,-112 1397,-112 1397,-148 1397,-148 1397,-154 1391,-160 1385,-160"/>
+<text text-anchor="start" x="1212.31" y="-145" font-family="arial" font-size="10.00" fill="#000000">Issue made worse because most tablet</text>
+<text text-anchor="start" x="1232.87" y="-133" font-family="arial" font-size="10.00" fill="#000000"> bug reports require extensive</text>
+<text text-anchor="start" x="1211.48" y="-121" font-family="arial" font-size="10.00" fill="#000000"> communication with the reporter as the</text>
+<text text-anchor="start" x="1245.66" y="-109" font-family="arial" font-size="10.00" fill="#000000"> issue is device specific.</text>
+</g>
+<!-- n25 -->
+<g id="node26" class="node">
+<title>n25</title>
+<path fill="#1b9e77" stroke="black" d="M1329,-296C1329,-296 1157,-296 1157,-296 1151,-296 1145,-290 1145,-284 1145,-284 1145,-208 1145,-208 1145,-202 1151,-196 1157,-196 1157,-196 1329,-196 1329,-196 1335,-196 1341,-202 1341,-208 1341,-208 1341,-284 1341,-284 1341,-290 1335,-296 1329,-296"/>
+<text text-anchor="start" x="1173.81" y="-282" font-family="arial" font-weight="bold" font-size="10.00" fill="#000000">Communication and debugging</text>
+<text text-anchor="start" x="1154.92" y="-265" font-family="arial" font-size="10.00" fill="#000000">The combinations of Blender having the</text>
+<text text-anchor="start" x="1183.82" y="-253" font-family="arial" font-size="10.00" fill="#000000"> Tablet API set while tablet</text>
+<text text-anchor="start" x="1160.49" y="-241" font-family="arial" font-size="10.00" fill="#000000"> preferences software allows users to</text>
+<text text-anchor="start" x="1178.27" y="-229" font-family="arial" font-size="10.00" fill="#000000"> disable Windows Ink creates</text>
+<text text-anchor="start" x="1157.71" y="-217" font-family="arial" font-size="10.00" fill="#000000"> ambiguities when communicating with</text>
+<text text-anchor="start" x="1210.49" y="-205" font-family="arial" font-size="10.00" fill="#000000"> bug reporters.</text>
+</g>
+<!-- n11&#45;&gt;n25 -->
+<g id="edge15" class="edge">
+<title>n11&#45;&gt;n25</title>
+<path fill="none" stroke="#00ff00" d="M1284.72,-160.06C1280.74,-168.18 1276.26,-177.29 1271.75,-186.46"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="1268.53,-185.1 1267.26,-195.62 1274.81,-188.18 1268.53,-185.1"/>
+</g>
+<!-- n12 -->
+<g id="node13" class="node">
+<title>n12</title>
+<path fill="white" stroke="#1b9e77" stroke-width="2" d="M1270,-484C1270,-484 1098,-484 1098,-484 1092,-484 1086,-478 1086,-472 1086,-472 1086,-444 1086,-444 1086,-438 1092,-432 1098,-432 1098,-432 1270,-432 1270,-432 1276,-432 1282,-438 1282,-444 1282,-444 1282,-472 1282,-472 1282,-478 1276,-484 1270,-484"/>
+<text text-anchor="start" x="1103.98" y="-470" font-family="arial" font-weight="bold" font-size="10.00" fill="#000000">Make Wintab opt&#45;in for Blender 2.93</text>
+<text text-anchor="start" x="1099.26" y="-453" font-family="arial" font-size="10.00" fill="#000000">Instead of removing Wintab in Blender</text>
+<text text-anchor="start" x="1115.37" y="-441" font-family="arial" font-size="10.00" fill="#000000"> 2.93, it should be made opt&#45;in.</text>
+</g>
+<!-- n12&#45;&gt;n22 -->
+<g id="edge17" class="edge">
+<title>n12&#45;&gt;n22</title>
+<path fill="none" stroke="#ff0000" d="M1122.31,-484.05C1087.22,-498.3 1042.73,-516.36 1004.23,-531.99"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="1002.53,-528.9 994.58,-535.91 1005.16,-535.39 1002.53,-528.9"/>
+</g>
+<!-- n13 -->
+<g id="node14" class="node">
+<title>n13</title>
+<path fill="white" stroke="#1b9e77" stroke-width="2" d="M953,-148C953,-148 781,-148 781,-148 775,-148 769,-142 769,-136 769,-136 769,-124 769,-124 769,-118 775,-112 781,-112 781,-112 953,-112 953,-112 959,-112 965,-118 965,-124 965,-124 965,-136 965,-136 965,-142 959,-148 953,-148"/>
+<text text-anchor="start" x="779.21" y="-127" font-family="arial" font-size="10.00" fill="#000000">Wintab is less stable than Windows Ink.</text>
+</g>
+<!-- n27 -->
+<g id="node28" class="node">
+<title>n27</title>
+<path fill="#1b9e77" stroke="black" d="M1060,-272C1060,-272 888,-272 888,-272 882,-272 876,-266 876,-260 876,-260 876,-232 876,-232 876,-226 882,-220 888,-220 888,-220 1060,-220 1060,-220 1066,-220 1072,-226 1072,-232 1072,-232 1072,-260 1072,-260 1072,-266 1066,-272 1060,-272"/>
+<text text-anchor="start" x="938.16" y="-258" font-family="arial" font-weight="bold" font-size="10.00" fill="#000000">Artist needs first</text>
+<text text-anchor="start" x="907.06" y="-241" font-family="arial" font-size="10.00" fill="#000000">Blender prioritizes artists&#39; over</text>
+<text text-anchor="start" x="930.66" y="-229" font-family="arial" font-size="10.00" fill="#000000"> developers&#39; needs.</text>
+</g>
+<!-- n13&#45;&gt;n27 -->
+<g id="edge19" class="edge">
+<title>n13&#45;&gt;n27</title>
+<path fill="none" stroke="#ff0000" d="M883.25,-148.31C899.18,-165.29 923.87,-191.59 943.47,-212.47"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="941.04,-215 950.44,-219.9 946.15,-210.21 941.04,-215"/>
+</g>
+<!-- n14 -->
+<g id="node15" class="node">
+<title>n14</title>
+<path fill="white" stroke="#1b9e77" stroke-width="2" d="M1170.5,-154C1170.5,-154 995.5,-154 995.5,-154 989.5,-154 983.5,-148 983.5,-142 983.5,-142 983.5,-118 983.5,-118 983.5,-112 989.5,-106 995.5,-106 995.5,-106 1170.5,-106 1170.5,-106 1176.5,-106 1182.5,-112 1182.5,-118 1182.5,-118 1182.5,-142 1182.5,-142 1182.5,-148 1176.5,-154 1170.5,-154"/>
+<text text-anchor="start" x="993.75" y="-139" font-family="arial" font-size="10.00" fill="#000000">Supporting Wintab increases the chance</text>
+<text text-anchor="start" x="1009.33" y="-127" font-family="arial" font-size="10.00" fill="#000000"> that artist will run into issues with</text>
+<text text-anchor="start" x="1065.99" y="-115" font-family="arial" font-size="10.00" fill="#000000"> tablets.</text>
+</g>
+<!-- n14&#45;&gt;n27 -->
+<g id="edge21" class="edge">
+<title>n14&#45;&gt;n27</title>
+<path fill="none" stroke="#ff0000" d="M1060.94,-154.07C1044.94,-170.81 1023.07,-193.68 1005.27,-212.3"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="1002.3,-210.34 997.92,-219.99 1007.36,-215.18 1002.3,-210.34"/>
+</g>
+<!-- n15 -->
+<g id="node16" class="node">
+<title>n15</title>
+<path fill="white" stroke="#1b9e77" stroke-width="2" d="M1169,-64C1169,-64 997,-64 997,-64 991,-64 985,-58 985,-52 985,-52 985,-28 985,-28 985,-22 991,-16 997,-16 997,-16 1169,-16 1169,-16 1175,-16 1181,-22 1181,-28 1181,-28 1181,-52 1181,-52 1181,-58 1175,-64 1169,-64"/>
+<text text-anchor="start" x="1002.43" y="-49" font-family="arial" font-size="10.00" fill="#000000">Not supporting Wintab increases the</text>
+<text text-anchor="start" x="1008.53" y="-37" font-family="arial" font-size="10.00" fill="#000000"> chance that an artist with a tablet</text>
+<text text-anchor="start" x="1028.83" y="-25" font-family="arial" font-size="10.00" fill="#000000"> issue won&#39;t be solvable.</text>
+</g>
+<!-- n15&#45;&gt;n14 -->
+<g id="edge20" class="edge">
+<title>n15&#45;&gt;n14</title>
+<path fill="none" stroke="#ff0000" d="M1083,-64.12C1083,-73.75 1083,-85.11 1083,-95.61"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="1079.5,-95.73 1083,-105.73 1086.5,-95.73 1079.5,-95.73"/>
+</g>
+<!-- n16 -->
+<g id="node17" class="node">
+<title>n16</title>
+<path fill="white" stroke="#1b9e77" stroke-width="2" d="M518.5,-148C518.5,-148 331.5,-148 331.5,-148 325.5,-148 319.5,-142 319.5,-136 319.5,-136 319.5,-124 319.5,-124 319.5,-118 325.5,-112 331.5,-112 331.5,-112 518.5,-112 518.5,-112 524.5,-112 530.5,-118 530.5,-124 530.5,-124 530.5,-136 530.5,-136 530.5,-142 524.5,-148 518.5,-148"/>
+<text text-anchor="start" x="329.65" y="-133" font-family="arial" font-size="10.00" fill="#000000">Wacom considers Wintab a legacy API and</text>
+<text text-anchor="start" x="349.64" y="-121" font-family="arial" font-size="10.00" fill="#000000"> does not update the specification.</text>
+</g>
+<!-- n28 -->
+<g id="node29" class="node">
+<title>n28</title>
+<path fill="#1b9e77" stroke="black" d="M736,-284C736,-284 564,-284 564,-284 558,-284 552,-278 552,-272 552,-272 552,-220 552,-220 552,-214 558,-208 564,-208 564,-208 736,-208 736,-208 742,-208 748,-214 748,-220 748,-220 748,-272 748,-272 748,-278 742,-284 736,-284"/>
+<text text-anchor="start" x="612.49" y="-270" font-family="arial" font-weight="bold" font-size="10.00" fill="#000000">Wintab dead API</text>
+<text text-anchor="start" x="582.2" y="-253" font-family="arial" font-size="10.00" fill="#000000">Wintab no longer has a central</text>
+<text text-anchor="start" x="568.58" y="-241" font-family="arial" font-size="10.00" fill="#000000"> authority to update the specification.</text>
+<text text-anchor="start" x="576.64" y="-229" font-family="arial" font-size="10.00" fill="#000000"> It is a dead API in the sense that</text>
+<text text-anchor="start" x="592.75" y="-217" font-family="arial" font-size="10.00" fill="#000000"> Latin is a dead language.</text>
+</g>
+<!-- n16&#45;&gt;n28 -->
+<g id="edge25" class="edge">
+<title>n16&#45;&gt;n28</title>
+<path fill="none" stroke="#00ff00" d="M458.68,-148.07C487.51,-162.67 530.21,-184.31 567.97,-203.44"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="566.44,-206.59 576.94,-207.98 569.6,-200.34 566.44,-206.59"/>
+</g>
+<!-- n17 -->
+<g id="node18" class="node">
+<title>n17</title>
+<path fill="white" stroke="#1b9e77" stroke-width="2" d="M301,-64C301,-64 129,-64 129,-64 123,-64 117,-58 117,-52 117,-52 117,-28 117,-28 117,-22 123,-16 129,-16 129,-16 301,-16 301,-16 307,-16 313,-22 313,-28 313,-28 313,-52 313,-52 313,-58 307,-64 301,-64"/>
+<text text-anchor="start" x="133.05" y="-49" font-family="arial" font-size="10.00" fill="#000000">Wacom&#39;s Wintab documentation was</text>
+<text text-anchor="start" x="134.98" y="-37" font-family="arial" font-size="10.00" fill="#000000"> sporatically offline during attempted</text>
+<text text-anchor="start" x="135.54" y="-25" font-family="arial" font-size="10.00" fill="#000000"> refactor of Blender&#39;s use of Wintab.</text>
+</g>
+<!-- n17&#45;&gt;n16 -->
+<g id="edge23" class="edge">
+<title>n17&#45;&gt;n16</title>
+<path fill="none" stroke="#00ff00" d="M269.9,-64.01C302.39,-77.62 343.24,-94.74 374.86,-107.99"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="373.78,-111.33 384.35,-111.97 376.48,-104.87 373.78,-111.33"/>
+</g>
+<!-- n18 -->
+<g id="node19" class="node">
+<title>n18</title>
+<path fill="white" stroke="#1b9e77" stroke-width="2" d="M516.5,-64C516.5,-64 343.5,-64 343.5,-64 337.5,-64 331.5,-58 331.5,-52 331.5,-52 331.5,-28 331.5,-28 331.5,-22 337.5,-16 343.5,-16 343.5,-16 516.5,-16 516.5,-16 522.5,-16 528.5,-22 528.5,-28 528.5,-28 528.5,-52 528.5,-52 528.5,-58 522.5,-64 516.5,-64"/>
+<text text-anchor="start" x="341.88" y="-49" font-family="arial" font-size="10.00" fill="#000000">Wacom&#39;s current Wintab documentation</text>
+<text text-anchor="start" x="347.69" y="-37" font-family="arial" font-size="10.00" fill="#000000"> does not appear to be linked through</text>
+<text text-anchor="start" x="390.21" y="-25" font-family="arial" font-size="10.00" fill="#000000"> the main website.</text>
+</g>
+<!-- n18&#45;&gt;n16 -->
+<g id="edge24" class="edge">
+<title>n18&#45;&gt;n16</title>
+<path fill="none" stroke="#00ff00" d="M428.69,-64.12C428.03,-75.7 427.23,-89.79 426.54,-101.88"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="423.05,-101.69 425.97,-111.87 430.03,-102.09 423.05,-101.69"/>
+</g>
+<!-- n19 -->
+<g id="node20" class="node">
+<title>n19</title>
+<path fill="white" stroke="#1b9e77" stroke-width="2" d="M739,-154C739,-154 561,-154 561,-154 555,-154 549,-148 549,-142 549,-142 549,-118 549,-118 549,-112 555,-106 561,-106 561,-106 739,-106 739,-106 745,-106 751,-112 751,-118 751,-118 751,-142 751,-142 751,-148 745,-154 739,-154"/>
+<text text-anchor="start" x="558.85" y="-139" font-family="arial" font-size="10.00" fill="#000000">Wintab has not been updated to describe</text>
+<text text-anchor="start" x="565.27" y="-127" font-family="arial" font-size="10.00" fill="#000000"> how system cursor scaling works with</text>
+<text text-anchor="start" x="575.53" y="-115" font-family="arial" font-size="10.00" fill="#000000"> DPI awareness of an application.</text>
+</g>
+<!-- n19&#45;&gt;n28 -->
+<g id="edge27" class="edge">
+<title>n19&#45;&gt;n28</title>
+<path fill="none" stroke="#00ff00" d="M650,-154.07C650,-166.55 650,-182.43 650,-197.42"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="646.5,-197.6 650,-207.6 653.5,-197.6 646.5,-197.6"/>
+</g>
+<!-- n20 -->
+<g id="node21" class="node">
+<title>n20</title>
+<path fill="white" stroke="#1b9e77" stroke-width="2" d="M736,-58C736,-58 564,-58 564,-58 558,-58 552,-52 552,-46 552,-46 552,-34 552,-34 552,-28 558,-22 564,-22 564,-22 736,-22 736,-22 742,-22 748,-28 748,-34 748,-34 748,-46 748,-46 748,-52 742,-58 736,-58"/>
+<text text-anchor="start" x="576.38" y="-43" font-family="arial" font-size="10.00" fill="#000000">Different librarys have chosen (or</text>
+<text text-anchor="start" x="574.43" y="-31" font-family="arial" font-size="10.00" fill="#000000"> unaware of differences) behavior.</text>
+</g>
+<!-- n20&#45;&gt;n19 -->
+<g id="edge26" class="edge">
+<title>n20&#45;&gt;n19</title>
+<path fill="none" stroke="#00ff00" d="M650,-58.39C650,-69.03 650,-83 650,-95.71"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="646.5,-95.98 650,-105.98 653.5,-95.98 646.5,-95.98"/>
+</g>
+<!-- n21&#45;&gt;n0 -->
+<g id="edge4" class="edge">
+<title>n21&#45;&gt;n0</title>
+<path fill="none" stroke="#ff0000" d="M1167.79,-592.68C1088.71,-611.75 977.59,-638.55 895.43,-658.37"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="894.46,-655 885.56,-660.75 896.1,-661.81 894.46,-655"/>
+</g>
+<!-- n22&#45;&gt;n0 -->
+<g id="edge8" class="edge">
+<title>n22&#45;&gt;n0</title>
+<path fill="none" stroke="#ff0000" d="M882.36,-600.09C867.94,-612.66 851.04,-627.4 835.4,-641.04"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="833.08,-638.42 827.85,-647.63 837.68,-643.7 833.08,-638.42"/>
+</g>
+<!-- n23&#45;&gt;n0 -->
+<g id="edge10" class="edge">
+<title>n23&#45;&gt;n0</title>
+<path fill="none" stroke="#00ff00" d="M687.64,-600.09C702.06,-612.66 718.96,-627.4 734.6,-641.04"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="732.32,-643.7 742.15,-647.63 736.92,-638.42 732.32,-643.7"/>
+</g>
+<!-- n24&#45;&gt;n0 -->
+<g id="edge14" class="edge">
+<title>n24&#45;&gt;n0</title>
+<path fill="none" stroke="#00ff00" d="M432.56,-595.54C504.93,-613.91 601.08,-638.32 674.67,-657"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="673.89,-660.41 684.44,-659.48 675.61,-653.62 673.89,-660.41"/>
+</g>
+<!-- n26 -->
+<g id="node27" class="node">
+<title>n26</title>
+<path fill="#1b9e77" stroke="black" d="M1060,-388C1060,-388 888,-388 888,-388 882,-388 876,-382 876,-376 876,-376 876,-348 876,-348 876,-342 882,-336 888,-336 888,-336 1060,-336 1060,-336 1066,-336 1072,-342 1072,-348 1072,-348 1072,-376 1072,-376 1072,-382 1066,-388 1060,-388"/>
+<text text-anchor="start" x="934.27" y="-374" font-family="arial" font-weight="bold" font-size="10.00" fill="#000000">Developer burden</text>
+<text text-anchor="start" x="891.5" y="-357" font-family="arial" font-size="10.00" fill="#000000">Differences in Wintab libraries makes</text>
+<text text-anchor="start" x="894.81" y="-345" font-family="arial" font-size="10.00" fill="#000000"> debugging a time consuming affair.</text>
+</g>
+<!-- n25&#45;&gt;n26 -->
+<g id="edge16" class="edge">
+<title>n25&#45;&gt;n26</title>
+<path fill="none" stroke="#00ff00" d="M1144.74,-288.64C1110.88,-302.99 1073.69,-318.75 1042.7,-331.89"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="1041.13,-328.75 1033.29,-335.87 1043.86,-335.19 1041.13,-328.75"/>
+</g>
+<!-- n26&#45;&gt;n12 -->
+<g id="edge18" class="edge">
+<title>n26&#45;&gt;n12</title>
+<path fill="none" stroke="#ff0000" d="M1030,-388.07C1057.18,-400.23 1090.01,-414.93 1118.36,-427.62"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="1117.23,-430.95 1127.79,-431.84 1120.09,-424.56 1117.23,-430.95"/>
+</g>
+<!-- n27&#45;&gt;n26 -->
+<g id="edge22" class="edge">
+<title>n27&#45;&gt;n26</title>
+<path fill="none" stroke="#ff0000" d="M974,-272.02C974,-287.65 974,-308.03 974,-325.34"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="970.5,-325.65 974,-335.65 977.5,-325.65 970.5,-325.65"/>
+</g>
+<!-- n28&#45;&gt;n26 -->
+<g id="edge28" class="edge">
+<title>n28&#45;&gt;n26</title>
+<path fill="none" stroke="#00ff00" d="M748.09,-281.51C794.51,-297.84 849.26,-317.11 893.24,-332.58"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="892.14,-335.91 902.74,-335.93 894.46,-329.31 892.14,-335.91"/>
+</g>
+<!-- n29 -->
+<g id="node30" class="node">
+<title>n29</title>
+<path fill="#1b9e77" stroke="black" d="M846,-388C846,-388 660,-388 660,-388 654,-388 648,-382 648,-376 648,-376 648,-348 648,-348 648,-342 654,-336 660,-336 660,-336 846,-336 846,-336 852,-336 858,-342 858,-348 858,-348 858,-376 858,-376 858,-382 852,-388 846,-388"/>
+<text text-anchor="start" x="689.38" y="-374" font-family="arial" font-weight="bold" font-size="10.00" fill="#000000">Good time to remove Wintab</text>
+<text text-anchor="start" x="681.88" y="-357" font-family="arial" font-size="10.00" fill="#000000">Windows Ink is available for any</text>
+<text text-anchor="start" x="657.98" y="-345" font-family="arial" font-size="10.00" fill="#000000"> Windows system Blender 2.93 can run on.</text>
+</g>
+<!-- n29&#45;&gt;n12 -->
+<g id="edge29" class="edge">
+<title>n29&#45;&gt;n12</title>
+<path fill="none" stroke="#ff0000" d="M849.28,-388.06C855.26,-389.44 861.21,-390.77 867,-392 959.63,-411.69 984.53,-407.59 1077,-428 1079.34,-428.52 1081.7,-429.05 1084.09,-429.6"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="1083.42,-433.04 1093.96,-431.94 1085.03,-426.23 1083.42,-433.04"/>
+</g>
+</g>
+</svg>
+</div></argdown-map></figure>
