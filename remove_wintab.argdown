@@ -1,0 +1,53 @@
+# Removing Wintab from Blender
+
+[Remove Wintab in Blender 2.93]: Blender 2.93 should remove Wintab and use Windows Pointers Events (Windows Ink) exclusively for tablet input on Windows.
+ 
+<Mouse mode pressure loss>: Pressure support with a tablet in mouse mode (relative motion) is only supportable with Wintab. Windows Ink doesn't support mouse mode tablet input with pressure.
+    - Mouse mode tablet support is a quirk of Blender not using tablet position from Wintab. Blender's peers (GIMP, Krita) do not support mouse mode tablet input.
+        + Wintab contexts with sysMode (mouse mode) enabled also don't support pressure.
+        + The system mouse mode setting is not reported by the Wintab API and can not be detected without unreliable heuristics.
+    -> [Remove Wintab in Blender 2.93]
+
+<Windows Ink detractors>: Windows Ink has vocal detractors. Removal of Wintab will elicit a strong negative response.
+    - Clear communication of the problems with Wintab and the costs to support can mitigate strong feelings against Windows Ink.
+        + Wintab is implicatable in Blender not having touch support due to occupying developer time.
+    + Current default of Wintab over Windows Ink may result in under-reporting of Windows Ink issues.
+    -> [Remove Wintab in Blender 2.93]
+
+<Wintab worse than Windows Ink>: Wintab for the average user is a worse experience than Windows Ink which supports high frequency input.
+    + Differences in Wintab libraries has killed the possibility of using high frequency position from Wintab.
+    +> [Remove Wintab in Blender 2.93]
+
+<Wintab Win32 sync issues>: Synchronization issues between Wintab pressure and Win32 mouse moves results in poor line quality.
+    + Wrong pressure at the beginning and ends of lines has to be cleaned up with heuristics in operators that use pressure specifically for Wintab.
+        + Issue is more pronounced with high frequency mouse input.
+    + Only the most recent pressure is used for multiple mouse moves because cursor position and pressure are not tightly coupled.
+    +> [Remove Wintab in Blender 2.93]
+
+<Communication and debugging>: The combinations of Blender having the Tablet API set while tablet preferences software allows users to disable Windows Ink creates ambiguities when communicating with bug reporters.
+    + Issue made worse because most tablet bug reports require extensive communication with the reporter as the issue is device specific.
+    +> <Developer burden>
+
+[Make Wintab opt-in for Blender 2.93]: Instead of removing Wintab in Blender 2.93, it should be made opt-in.
+    -> <Windows Ink detractors>
+
+<Developer burden>: Differences in Wintab libraries makes debugging a time consuming affair.
+    -> [Make Wintab opt-in for Blender 2.93]
+
+<Artist needs first>: Blender prioritizes artists' over developers' needs.
+    - Wintab is less stable than Windows Ink.
+    - Supporting Wintab increases the chance that artist will run into issues with tablets.
+        - Not supporting Wintab increases the chance that an artist with a tablet issue won't be solvable.
+    -> <Developer burden>
+
+<Wintab dead API>: Wintab no longer has a central authority to update the specification. It is a dead API in the sense that Latin is a dead language.
+    + Wacom considers Wintab a legacy API and does not update the specification.
+        + Wacom's Wintab documentation was sporatically offline during attempted refactor of Blender's use of Wintab.
+        + Wacom's current Wintab documentation does not appear to be linked through the main website.
+    + Wintab has not been updated to describe how system cursor scaling works with DPI awareness of an application.
+        + Different librarys have chosen (or unaware of differences) behavior.
+    +> <Developer burden>
+
+<Good time to remove Wintab>: Windows Ink is available for any Windows system Blender 2.93 can run on.
+    -> [Make Wintab opt-in for Blender 2.93]
+
